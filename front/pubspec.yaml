@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   web_socket_channel: ^2.3.0
   socket_io_client: ^2.0.1
+  syncfusion_flutter_gauges: ^21.1.39
 
 dev_dependencies:
   flutter_test:

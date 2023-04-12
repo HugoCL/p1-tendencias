@@ -39,34 +39,36 @@ function mqttConnect() {
     client.subscribe('suscribe', function (err) {
         // if a message arrives, do something with it
         client.on('message', async function (topic, message) {
-            // the json message is like this example: {"device":"temperatura-humedad","topic":"sensor/tmp1"}
-            const db = nano.db.use<Device>('p1-tendencias');
-            const data = JSON.parse(message.toString());
-            const id = `devices:${data.topic.replace('/', '-')}`;
-            // check if the device exists
-            const deviceExists = await db
-                .get(id)
-                .then((body) => {
-                    return true;
-                })
-                .catch((err) => {
-                    console.log(err);
-                    return false;
-                });
-            if (deviceExists) {
-                return;
+            if (topic === 'suscribe') {
+                // the json message is like this example: {"device":"temperatura-humedad","topic":"sensor/tmp1"}
+                const db = nano.db.use<Device>('p1-tendencias');
+                const data = JSON.parse(message.toString());
+                const id = `devices:${data.topic.replace('/', '-')}`;
+                // check if the device exists
+                const deviceExists = await db
+                    .get(id)
+                    .then((body) => {
+                        return true;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        return false;
+                    });
+                if (deviceExists) {
+                    return;
+                }
+                // We register the device
+                const device = new Device(id, data.device, data.topic);
+                await db
+                    .insert(device)
+                    .then((body) => {
+                        device.processAPIResponse(body);
+                        console.log(body);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
-            // We register the device
-            const device = new Device(id, data.device, data.topic);
-            await db
-                .insert(device)
-                .then((body) => {
-                    device.processAPIResponse(body);
-                    console.log(body);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
         });
     });
 }
