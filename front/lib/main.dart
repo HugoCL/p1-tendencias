@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSocket streamSocket = StreamSocket();
   double temperature = 0;
   double humidity = 0;
+  DateTime timestamp = DateTime.now();
   void connect() {
     IO.Socket socket = IO.io('http://localhost:3000',
         OptionBuilder().setTransports(['websocket']).build());
@@ -63,10 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
       if (data['unit'] == 'C') {
         setState(() {
           temperature = data['data'];
+          timestamp = DateTime.parse(data['timestamp']).toLocal();
         });
       } else if (data['unit'] == '%') {
         setState(() {
           humidity = data['data'];
+          timestamp = DateTime.parse(data['timestamp']).toLocal();
         });
       }
     });
@@ -113,7 +116,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           GaugeAnnotation(
                               widget: Container(
                                   child: Text(
-                                      '${temperature.toStringAsFixed(2)} °C')),
+                                      '${temperature.toStringAsFixed(2)} °C',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ))),
                               angle: 90,
                               positionFactor: 0.5)
                         ],
@@ -144,7 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           GaugeAnnotation(
                               widget: Container(
                                   child:
-                                      Text('${humidity.toStringAsFixed(2)} %')),
+                                      Text('${humidity.toStringAsFixed(2)} %',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ))),
                               angle: 90,
                               positionFactor: 0.5)
                         ],
@@ -154,6 +163,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
+            Center(
+              child: Text(
+                'Última actualización: ${timestamp.toString()}',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            )
           ],
         ),
       ),
