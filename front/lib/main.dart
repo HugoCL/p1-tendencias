@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double humidity = 0;
   DateTime timestamp = DateTime.now();
   void connect() {
-    IO.Socket socket = IO.io('http://localhost:3000',
+    IO.Socket socket = IO.io('https://ws-p1-tendencias-with.hugocastro.dev',
         OptionBuilder().setTransports(['websocket']).build());
     socket.onConnect((_) {
       print('Conectado!');
