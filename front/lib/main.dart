@@ -6,6 +6,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import 'color_schemes.g.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -29,10 +31,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Proyecto 1 de Tendencias @ hugocastro.dev',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         useMaterial3: true,
+        colorScheme: lightColorScheme,
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
       ),
       home: const MyHomePage(
           title: 'Proyecto 1 - Tendencias en Tecnologías Computacionales'),
