@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  ws-p1-tendencias-with:
+    build: .
+    container_name: ws-p1-tendencias-with
+    restart: always
+    expose:
+      - 3000
+    env_file:
+      - .env
+    networks:
+      - web
+networks:
+  web:
+    name: web
+    external: true
