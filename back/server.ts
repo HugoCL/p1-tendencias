@@ -24,7 +24,9 @@ const nano = Nano(
     `https://${process.env.TENANT}:${process.env.PASSWORD}@${process.env.REMOTE_COUCHDB_URL}`
 );
 
-const client = mqtt.connect('ws://mqttws.hugocastro.dev');
+const client = mqtt.connect('mqtt://mqtt.in.biovisionagricola.cl', {
+    protocol: 'mqtt',
+});
 
 // App Settings and Middlewares
 app.use(cors({ origin: '*' }));
@@ -40,7 +42,7 @@ function mqttConnect() {
             // the json message is like this example: {"device":"temperatura-humedad","topic":"sensor/tmp1"}
             const db = nano.db.use<Device>('p1-tendencias');
             const data = JSON.parse(message.toString());
-            const id = `devices:${topic.replace('/', '-')}`;
+            const id = `devices:${data.topic.replace('/', '-')}`;
             // check if the device exists
             const deviceExists = await db
                 .get(id)
@@ -48,6 +50,7 @@ function mqttConnect() {
                     return true;
                 })
                 .catch((err) => {
+                    console.log(err);
                     return false;
                 });
             if (deviceExists) {
